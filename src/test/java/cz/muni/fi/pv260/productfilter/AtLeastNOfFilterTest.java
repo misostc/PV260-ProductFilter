@@ -1,8 +1,5 @@
-package unit;
+package cz.muni.fi.pv260.productfilter;
 
-import cz.muni.fi.pv260.productfilter.AtLeastNOfFilter;
-import cz.muni.fi.pv260.productfilter.Filter;
-import cz.muni.fi.pv260.productfilter.FilterNeverSucceeds;
 import org.junit.Assert;
 import org.junit.Test;
 
