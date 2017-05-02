@@ -14,9 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by micha on 02.05.2017.
@@ -147,6 +145,8 @@ public class ControllerTest {
         when(input.obtainProducts()).thenThrow(ex);
         Controller controller = new Controller(input, output, logger);
         controller.select(filter);
+
+        verify(output, never()).postSelectedProducts(any());
 
         verify(logger).setLevel(eq("ERROR"));
         verify(logger).log(any(), eq("Filter procedure failed with exception: Mocked exception"));
