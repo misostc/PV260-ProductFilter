@@ -62,14 +62,40 @@ public class AtLeastNOfFilterTest {
     }
 
     @Test
-    public void testPassesInvalidMultipleFilters(){
+    public void testPassesInvalidMultipleChildFilters(){
         filter = new AtLeastNOfFilter<>(2,new FilterNonEmptyString(),new FilterStringStartsWithH());
         Assert.assertFalse("filter::passes should fail because not all filter passes",filter.passes("Welcome"));
     }
 
+    private class FilterSingleCharacterString implements Filter<String>{
+
+        @Override
+        public boolean passes(String item) {
+            return item.length() == 1;
+        }
+    }
+
     @Test
-    public void testPassesValidMultipleFilters(){
-        filter = new AtLeastNOfFilter<String>(2,new FilterNonEmptyString(),new FilterNonEmptyString(), new FilterStringStartsWithH());
+    public void testPassesAtMostZeroChildFiltersPasses(){
+        filter = new AtLeastNOfFilter<>(1,new FilterSingleCharacterString(),new FilterStringStartsWithH());
+        Assert.assertFalse("filter:passes should fail because n - 1 filters passes only",filter.passes("Welcome"));
+    }
+
+    @Test
+    public void testPassesSingleChildFilterPasses(){
+        filter = new AtLeastNOfFilter<>(1,new FilterSingleCharacterString(),new FilterStringStartsWithH());
+        Assert.assertTrue("filter:passes should pass because at least n filters passes",filter.passes("Hello"));
+    }
+
+    @Test
+    public void testPassesAllChildFilterPasses(){
+        filter = new AtLeastNOfFilter<>(1,new FilterNonEmptyString(),new FilterSingleCharacterString(), new FilterStringStartsWithH());
+        Assert.assertTrue("filter:passes should pass because all child filter passes",filter.passes("H"));
+    }
+
+    @Test
+    public void testPassesValidMultipleChildFilters(){
+        filter = new AtLeastNOfFilter<>(2,new FilterNonEmptyString(),new FilterNonEmptyString(), new FilterStringStartsWithH());
         Assert.assertTrue("filter:passes should pass because number of passed filters is atleast n",filter.passes("Hello World!"));
     }
 }
